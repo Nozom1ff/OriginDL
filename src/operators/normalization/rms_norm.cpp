@@ -15,8 +15,7 @@ std::vector<Tensor> RMSNorm::forward(const std::vector<Tensor> &xs)
     // RMSNorm 需要 2 个输入：x, gamma
     if (unlikely(xs.size() != 2))
     {
-        THROW_RUNTIME_ERROR(
-            "RMSNorm operator requires exactly 2 inputs (x, gamma), but got {}", xs.size());
+        THROW_RUNTIME_ERROR("RMSNorm operator requires exactly 2 inputs (x, gamma), but got {}", xs.size());
     }
 
     auto &x     = xs[0];
@@ -36,8 +35,8 @@ std::vector<Tensor> RMSNorm::forward(const std::vector<Tensor> &xs)
         auto result = x_mat.rms_norm_forward(gamma_mat, eps_);
 
         // 转换结果
-        y           = convert_mat_to_tensor(std::move(result.y));
-        saved_rms_  = convert_mat_to_tensor(std::move(result.rms));
+        y          = convert_mat_to_tensor(std::move(result.y));
+        saved_rms_ = convert_mat_to_tensor(std::move(result.rms));
     }
     else
     {
@@ -66,10 +65,10 @@ std::vector<Tensor> RMSNorm::backward(const std::vector<Tensor> &gys)
     auto &gamma = this->inputs_[1];
 
     // 获取 Mat 引用并调用底层 rms_norm_backward
-    const Mat &gy_mat         = mat(gy);
-    const Mat &x_mat          = mat(x);
-    const Mat &gamma_mat      = mat(gamma);
-    const Mat &saved_rms_mat  = mat(saved_rms_);
+    const Mat &gy_mat        = mat(gy);
+    const Mat &x_mat         = mat(x);
+    const Mat &gamma_mat     = mat(gamma);
+    const Mat &saved_rms_mat = mat(saved_rms_);
 
     auto results = x_mat.rms_norm_backward(gy_mat, gamma_mat, saved_rms_mat, eps_);
 

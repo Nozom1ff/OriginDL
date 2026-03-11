@@ -394,31 +394,6 @@ void index_put(OriginMat &mat, std::initializer_list<size_t> indices, const Scal
     });
 }
 
-// === RMSNorm 相关操作 ===
-
-RMSNormForwardResult rms_norm_forward(const OriginMat &x,
-                                      const OriginMat &gamma,
-                                      float eps)
-{
-    THROW_RUNTIME_ERROR("RMSNorm CUDA implementation not yet available. Please use CPU backend.");
-}
-
-std::unique_ptr<Mat> rms_norm(const OriginMat &x,
-                              const OriginMat &gamma,
-                              float eps)
-{
-    THROW_RUNTIME_ERROR("RMSNorm CUDA implementation not yet available. Please use CPU backend.");
-}
-
-std::vector<std::unique_ptr<Mat>> rms_norm_backward(const OriginMat &gy,
-                                                    const OriginMat &x,
-                                                    const OriginMat &gamma,
-                                                    const OriginMat &saved_rms,
-                                                    float eps)
-{
-    THROW_RUNTIME_ERROR("RMSNorm CUDA implementation not yet available. Please use CPU backend.");
-}
-
 }  // namespace cuda
 }  // namespace origin
 #endif  // __CUDACC__
