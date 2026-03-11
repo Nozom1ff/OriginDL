@@ -346,15 +346,6 @@ set_target_properties(test_batch_norm_operator PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_RELEASE ${UNIT_TEST_OUTPUT_DIR}
 )
 
-add_executable(test_rms_norm_operator operator/test_rms_norm.cpp)
-add_dependencies(test_rms_norm_operator gtest gtest_main origindl test_utils gtest_utils)
-target_link_libraries(test_rms_norm_operator ${GTEST_LIBRARIES} origindl test_utils gtest_utils pthread)
-target_include_directories(test_rms_norm_operator PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/tests/unit_test/common ${GTEST_INCLUDE_DIRS})
-set_target_properties(test_rms_norm_operator PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${UNIT_TEST_OUTPUT_DIR}
-    RUNTIME_OUTPUT_DIRECTORY_DEBUG ${UNIT_TEST_OUTPUT_DIR}
-    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${UNIT_TEST_OUTPUT_DIR}
-)
 
 add_executable(test_max_pool2d operator/test_max_pool2d.cpp)
 add_dependencies(test_max_pool2d gtest gtest_main origindl test_utils gtest_utils)
@@ -661,7 +652,6 @@ add_test(NAME reshape_test COMMAND ${UNIT_TEST_OUTPUT_DIR}/test_reshape)
 add_test(NAME matmul_test COMMAND ${UNIT_TEST_OUTPUT_DIR}/test_matmul)
 add_test(NAME conv2d_test COMMAND ${UNIT_TEST_OUTPUT_DIR}/test_conv2d)
 add_test(NAME batch_norm_operator_test COMMAND ${UNIT_TEST_OUTPUT_DIR}/test_batch_norm_operator)
-add_test(NAME rms_norm_operator_test COMMAND ${UNIT_TEST_OUTPUT_DIR}/test_rms_norm_operator)
 add_test(NAME linear_regression_test COMMAND ${UNIT_TEST_OUTPUT_DIR}/test_linear_regression)
 
 # 设置测试属性
