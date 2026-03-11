@@ -9,8 +9,7 @@ namespace origin
 namespace nn
 {
 
-RMSNorm::RMSNorm(int normalized_shape, float eps)
-    : normalized_shape_(normalized_shape), eps_(eps)
+RMSNorm::RMSNorm(int normalized_shape, float eps) : normalized_shape_(normalized_shape), eps_(eps)
 {
     if (unlikely(normalized_shape <= 0))
     {
@@ -18,9 +17,9 @@ RMSNorm::RMSNorm(int normalized_shape, float eps)
     }
 
     // 初始化 gamma 为全 1
-    auto gamma_tensor =
-        Tensor::ones(Shape{static_cast<size_t>(normalized_shape)}, TensorOptions(DataType::kFloat32).requires_grad(true));
-    gamma_ = Parameter(gamma_tensor);
+    auto gamma_tensor = Tensor::ones(Shape{static_cast<size_t>(normalized_shape)},
+                                     TensorOptions(DataType::kFloat32).requires_grad(true));
+    gamma_            = Parameter(gamma_tensor);
 
     // 注册参数
     register_parameter("weight", gamma_);
@@ -38,8 +37,8 @@ Tensor RMSNorm::forward(const Tensor &input)
     size_t last_dim = input_shape[input_shape.size() - 1];
     if (unlikely(last_dim != static_cast<size_t>(normalized_shape_)))
     {
-        THROW_RUNTIME_ERROR("RMSNorm forward: input last dimension {} does not match normalized_shape {}",
-                            last_dim, normalized_shape_);
+        THROW_RUNTIME_ERROR("RMSNorm forward: input last dimension {} does not match normalized_shape {}", last_dim,
+                            normalized_shape_);
     }
 
     // 创建 RMSNorm Operator
@@ -58,9 +57,9 @@ Tensor RMSNorm::forward(const Tensor &input)
 void RMSNorm::reset_parameters()
 {
     // 重置 gamma 为全 1
-    auto gamma_tensor =
-        Tensor::ones(Shape{static_cast<size_t>(normalized_shape_)}, TensorOptions(DataType::kFloat32).requires_grad(true));
-    gamma_ = Parameter(gamma_tensor);
+    auto gamma_tensor = Tensor::ones(Shape{static_cast<size_t>(normalized_shape_)},
+                                     TensorOptions(DataType::kFloat32).requires_grad(true));
+    gamma_            = Parameter(gamma_tensor);
 }
 
 }  // namespace nn

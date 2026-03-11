@@ -12,9 +12,7 @@ namespace cpu
 
 // ==================== rms_norm 前向传播 ====================
 
-RMSNormForwardResult rms_norm_forward(const OriginMat &x,
-                                      const OriginMat &gamma,
-                                      float eps)
+RMSNormForwardResult rms_norm_forward(const OriginMat &x, const OriginMat &gamma, float eps)
 {
     // 输入验证
     auto x_shape = x.shape();
@@ -53,10 +51,10 @@ RMSNormForwardResult rms_norm_forward(const OriginMat &x,
     }
 
     // 创建输出
-    auto y      = std::make_unique<OriginMat>(x_shape, x.dtype(), x.device());
-    auto rms    = std::make_unique<OriginMat>(Shape{outer_size}, x.dtype(), x.device());
+    auto y   = std::make_unique<OriginMat>(x_shape, x.dtype(), x.device());
+    auto rms = std::make_unique<OriginMat>(Shape{outer_size}, x.dtype(), x.device());
 
-    void *y_data  = y->storage()->data();
+    void *y_data   = y->storage()->data();
     void *rms_data = rms->storage()->data();
 
     // 使用类型分发器执行计算
@@ -88,21 +86,19 @@ RMSNormForwardResult rms_norm_forward(const OriginMat &x,
             // 归一化并应用 gamma：y = gamma * x / rms
             for (size_t j = 0; j < last_dim; ++j)
             {
-                size_t idx     = i * last_dim + j;
-                y_ptr[idx]     = gamma_ptr[j] * x_ptr[idx] / rms_val;
+                size_t idx = i * last_dim + j;
+                y_ptr[idx] = gamma_ptr[j] * x_ptr[idx] / rms_val;
             }
         }
     });
 
     RMSNormForwardResult result;
-    result.y    = std::move(y);
-    result.rms  = std::move(rms);
+    result.y   = std::move(y);
+    result.rms = std::move(rms);
     return result;
 }
 
-std::unique_ptr<Mat> rms_norm(const OriginMat &x,
-                              const OriginMat &gamma,
-                              float eps)
+std::unique_ptr<Mat> rms_norm(const OriginMat &x, const OriginMat &gamma, float eps)
 {
     auto result = rms_norm_forward(x, gamma, eps);
     return std::move(result.y);
@@ -132,8 +128,7 @@ std::vector<std::unique_ptr<Mat>> rms_norm_backward(const OriginMat &gy,
         outer_size *= x_shape[i];
     }
 
-    if (gy.shape() != x_shape || gamma.shape() != Shape({last_dim}) ||
-        saved_rms.shape() != Shape({outer_size}))
+    if (gy.shape() != x_shape || gamma.shape() != Shape({last_dim}) || saved_rms.shape() != Shape({outer_size}))
     {
         THROW_INVALID_ARG("rms_norm_backward: shape mismatch");
     }
@@ -203,13 +198,13 @@ std::vector<std::unique_ptr<Mat>> rms_norm_backward(const OriginMat &gy,
 
             // 计算 gx
             // gx = (1 / rms) * (gy - (1 / (rms^2 * last_dim)) * sum_gy_x * x)
-            T rms_sq        = rms_val * rms_val;
-            T scale         = T(1) / rms_val;
-            T correction    = sum_gy_x / (rms_sq * static_cast<T>(last_dim));
+            T rms_sq     = rms_val * rms_val;
+            T scale      = T(1) / rms_val;
+            T correction = sum_gy_x / (rms_sq * static_cast<T>(last_dim));
 
             for (size_t j = 0; j < last_dim; ++j)
             {
-                size_t idx = i * last_dim + j;
+                size_t idx  = i * last_dim + j;
                 gx_ptr[idx] = scale * (gy_ptr[idx] - correction * x_ptr[idx]);
             }
         }

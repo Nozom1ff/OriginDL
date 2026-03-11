@@ -1781,8 +1781,8 @@ OriginMat::RMSNormResult OriginMat::rms_norm_forward(const Mat &gamma, float eps
     {
         auto result = cpu::rms_norm_forward(*this, *gamma_mat, eps);
         OriginMat::RMSNormResult ret;
-        ret.y    = std::move(result.y);
-        ret.rms  = std::move(result.rms);
+        ret.y   = std::move(result.y);
+        ret.rms = std::move(result.rms);
         return ret;
     }
     else if (storage_->device_type() == DeviceType::kCUDA)
@@ -1790,8 +1790,8 @@ OriginMat::RMSNormResult OriginMat::rms_norm_forward(const Mat &gamma, float eps
 #ifdef WITH_CUDA
         auto result = cuda::rms_norm_forward(*this, *gamma_mat, eps);
         OriginMat::RMSNormResult ret;
-        ret.y    = std::move(result.y);
-        ret.rms  = std::move(result.rms);
+        ret.y   = std::move(result.y);
+        ret.rms = std::move(result.rms);
         return ret;
 #else
         THROW_RUNTIME_ERROR("CUDA support not compiled in");
@@ -1833,9 +1833,9 @@ std::unique_ptr<Mat> OriginMat::rms_norm(const Mat &gamma, float eps) const
 }
 
 std::vector<std::unique_ptr<Mat>> OriginMat::rms_norm_backward(const Mat &gy,
-                                                                const Mat &gamma,
-                                                                const Mat &saved_rms,
-                                                                float eps) const
+                                                               const Mat &gamma,
+                                                               const Mat &saved_rms,
+                                                               float eps) const
 {
     // 类型检查和转换
     const OriginMat *gy_mat = dynamic_cast<const OriginMat *>(&gy);
