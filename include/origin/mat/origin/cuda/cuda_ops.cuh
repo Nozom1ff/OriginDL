@@ -549,6 +549,43 @@ std::vector<std::unique_ptr<Mat>> batch_norm_backward(const OriginMat &gy,
                                                       float eps,
                                                       int num_dims);
 
+// === RMSNorm 相关操作 ===
+
+/**
+ * @brief CUDA RMSNorm 前向传播结果结构体
+ */
+struct RMSNormForwardResult
+{
+    std::unique_ptr<Mat> y;    // 输出
+    std::unique_ptr<Mat> rms;  // RMS 值
+};
+
+/**
+ * @brief CUDA rms_norm_forward：RMSNorm 前向传播（返回所有中间结果）
+ * @note CUDA 版本暂未实现，调用会抛出异常
+ */
+RMSNormForwardResult rms_norm_forward(const OriginMat &x,
+                                      const OriginMat &gamma,
+                                      float eps);
+
+/**
+ * @brief CUDA rms_norm：RMSNorm 前向传播（只返回输出）
+ * @note CUDA 版本暂未实现，调用会抛出异常
+ */
+std::unique_ptr<Mat> rms_norm(const OriginMat &x,
+                              const OriginMat &gamma,
+                              float eps);
+
+/**
+ * @brief CUDA rms_norm_backward：RMSNorm 反向传播
+ * @note CUDA 版本暂未实现，调用会抛出异常
+ */
+std::vector<std::unique_ptr<Mat>> rms_norm_backward(const OriginMat &gy,
+                                                    const OriginMat &x,
+                                                    const OriginMat &gamma,
+                                                    const OriginMat &saved_rms,
+                                                    float eps);
+
 // === 上采样相关操作 ===
 
 /**
